@@ -1,0 +1,45 @@
+<section class="hero-carousel">
+  <mdb-carousel [indicators]="true">
+    <mdb-carousel-item *ngFor="let p of products">
+      <img
+        [src]="p.img"
+        [alt]="p.title"
+        class="d-block w-100 carousel-img"
+      />
+      <div class="carousel-caption">
+        <h2 class="fw-bold"> {{ p.title }} </h2>
+        <p> {{ p.description }} </p>
+      </div>
+    </mdb-carousel-item> 
+  </mdb-carousel>
+</section>
+<section class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">Catálogo de productos</h1>
+    <p class="text-muted">Explora nuestros productos disponibles.</p>
+  </div>
+  <div class="row g-4">
+    <ng-container *ngFor="let p of products; let i = index">
+      <div class="col-12 col-md-6 col-lg-4" [routerLink]="['/description', p.id]" style="cursor: pointer;">
+        <mat-card appearance="outlined" class="custom-card shadow-sm h-100">
+          <img mat-card-image [src]="p.img" [alt]="p.title" />
+          <mat-card-header class="pb-2">
+            <mat-card-title class="text-dark">{{ p.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="flex-grow-1 d-flex flex-column">
+            <p class="mb-3 fs-6">{{ p.description }}</p>
+            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+              <span class="fs-5 fw-bold text-success">{{ p.price }}</span>
+              <span class="badge bg-light text-success border border-success">{{ p.tipoEnvio }}</span>
+            </div>
+          </mat-card-content>
+          <mat-card-actions class="p-3">
+            <button mat-raised-button color="success" class="bg-success text-light w-100" [routerLink]="['/description', p.id]" (click)="$event.stopPropagation()">
+              Ver más
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </ng-container>
+  </div>
+</section>

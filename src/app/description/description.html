@@ -1,0 +1,116 @@
+<header class="bg-warning py-2 px-3 shadow-sm mb-3">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center gap-4 w-50">
+      <h1 class="m-0 fs-4">
+        <a routerLink="/" class="text-dark text-decoration-none fw-bold" style="font-style: italic;">mercadolibre</a>
+      </h1>
+      <search class="w-100">
+        <form class="input-group bg-white rounded shadow-sm" role="search" (submit)="$event.preventDefault()">
+          <input type="search" class="form-control border-0 py-1" placeholder="Buscar productos, marcas y más..." aria-label="Buscar productos">
+          <button class="btn btn-light border-0 text-muted d-flex align-items-center justify-content-center px-3" type="submit" aria-label="Buscar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+          </button>
+        </form>
+      </search>
+    </div>
+    <aside class="text-dark small fw-semibold">
+      <span>¡Envío Express en menos de 2 horas!</span>
+    </aside>
+  </div>
+</header>
+
+<main class="container bg-white rounded shadow-sm p-4 my-3" *ngIf="product; else notFound">
+  <nav aria-label="Breadcrumb" class="mb-3 pb-2 border-bottom small text-muted">
+    <ol class="breadcrumb mb-0 bg-transparent p-0">
+      <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-primary">Volver al listado</a></li>
+      <li class="breadcrumb-item">Computación</li>
+      <li class="breadcrumb-item">Accesorios</li>
+      <li class="breadcrumb-item active text-dark" aria-current="page">Detalle</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-end mb-3 small text-primary">
+    <span class="me-3 cursor-pointer" role="button" tabindex="0">Compartir</span>
+    <span class="cursor-pointer" role="button" tabindex="0">Vender uno igual</span>
+  </div>
+
+  <article class="row">
+    <section class="col-12 col-md-7 d-flex" aria-label="Galería de imágenes del producto">
+      <ul class="list-unstyled d-flex flex-column gap-2 me-3 mb-0">
+        <li class="border rounded p-1 thumb-box" (click)="changeImage(product.img)" role="button" tabindex="0">
+          <img [src]="product.img" class="w-100 h-100 object-fit-cover" alt="Vista miniatura principal del producto">
+        </li>
+        <li class="border rounded p-1 thumb-box" *ngFor="let imgSec of product.imagenesSecundarias" (click)="changeImage(imgSec)" role="button" tabindex="0">
+          <img [src]="imgSec" class="w-100 h-100 object-fit-cover" alt="Vista miniatura secundaria del producto">
+        </li>
+      </ul>
+      
+      <figure class="flex-grow-1 text-center position-relative d-flex align-items-center justify-content-center main-img-container m-0">
+        <img [src]="activeImage" [alt]="product.title" class="img-fluid main-product-img" />
+      </figure>
+    </section>
+
+    <aside class="col-12 col-md-5" aria-label="Opciones de compra">
+      <div class="border rounded-3 p-4 shadow-sm bg-white">
+        <div class="text-muted small mb-2">
+          <span>{{ product.condicion }}</span> | <span aria-label="Cantidad vendida">{{ product.vendidos }} vendidos</span>
+        </div>
+        <h2 class="fw-bold fs-4 text-dark mb-2">{{ product.title }}</h2>
+        <div class="mb-3 text-warning small" aria-label="Calificación de 4 de 5 estrellas">
+          ★★★★☆ <span class="text-muted">({{ product.opiniones }} opiniones)</span>
+        </div>
+        <div class="mb-3">
+          <span class="fs-2 fw-light text-dark" aria-label="Precio">{{ product.price }}</span>
+        </div>
+        <section class="mb-4" aria-label="Información de envío">
+          <div class="text-success fw-semibold small">
+            {{ product.tipoEnvio }}
+          </div>
+          <div class="text-muted location-text">Ubicación: <strong>{{ product.ubicacion }}</strong></div>
+          <a href="#" class="text-primary small text-decoration-none">Ver costos de envío</a>
+        </section>
+        <div class="mb-3">
+          <span class="small text-muted d-block mb-1">Color: <strong class="text-dark">{{ product.color }}</strong></span>
+        </div>
+        <div class="mb-4 d-flex align-items-center gap-2">
+          <span class="small">Cantidad: <strong>1 unidad</strong></span>
+          <span class="text-muted small">({{ product.stock }} disponibles)</span>
+        </div>
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-primary py-2 fw-semibold shadow-sm buy-btn">
+            Comprar ahora
+          </button>
+          <button type="button" class="btn btn-light text-primary py-2 fw-semibold shadow-sm cart-btn">
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </aside>
+  </article>
+
+  <section class="row mt-5 pt-4 border-top" aria-label="Información detallada">
+    <div class="col-12 col-md-8">
+      <h3 class="fw-normal mb-4">Descripción</h3>
+      <p class="text-muted fs-6 lh-lg mb-5">{{ product.description }}</p>
+      <h3 class="fw-normal mb-3">Características principales</h3>
+      <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item d-flex justify-content-between px-0 py-2 small" *ngFor="let tech of product.detallesTecnicos">
+          <span class="text-muted">{{ tech.label }}</span>
+          <span class="fw-semibold text-dark">{{ tech.value }}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<ng-template #notFound>
+  <main class="container text-center py-5">
+    <h2 class="fw-bold text-danger mb-3">Publicación pausada o finalizada</h2>
+    <p class="text-muted mb-4">El producto que buscas no existe o ya no está disponible.</p>
+    <button type="button" class="btn btn-primary px-4 py-2" routerLink="/">
+      Volver al inicio
+    </button>
+  </main>
+</ng-template>
